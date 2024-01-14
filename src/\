@@ -1,0 +1,71 @@
+import { ChangeEvent, useState } from "react";
+import FileSelect from "./FileSelect";
+import InputField from "./inputField";
+import RegisterJPG from "./register.jpg";
+import SelectField from "./SelectField";
+
+const Register = () => {
+    const [username, setUsername] = useState("")
+    const [pass, setPass] = useState("")
+    const [email, setEmail] = useState("")
+    const [info, setInfo] = useState("")
+    const [country, setCountry] = useState("")
+    const countries = ['Option 1', 'Option 2', 'Option 3']
+
+    const handleSelectChange = (value: string) => setCountry(value)
+    const handleFileChange = (selectedFile: File | null) => {
+        if (selectedFile) {
+            console.log('Selected file:', selectedFile.name);
+        } else {
+            console.log('No file selected');
+        }
+    };
+
+    return (
+        <div className="w-full h-screen flex items-center justify-center relative" id="background">
+            <img className="h-full" src={RegisterJPG} alt="hand of a DJ on a disk" />
+            <div id="black-box" className="h-screen w-1/4 bg-black absolute flex justify-center items-center">
+                <div className="text-white w-3/4">
+                    <h3 className="text-2xl mb-3">
+                        register as an
+                        <span className="text-violet-300"> artist</span>
+                    </h3>
+                    <div className="text-black">
+                        <InputField
+                            value={username}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+                            name="username"
+                            placeholder="username" />
+                        <InputField
+                            type="password"
+                            value={pass}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setPass(e.target.value)}
+                            name="password"
+                            placeholder="password" />
+                        <InputField
+                            type="email"
+                            value={email}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                            name="email"
+                            placeholder="e-mail" />
+                        <SelectField
+                            options={countries}
+                            value={country}
+                            onChange={handleSelectChange}
+                        />
+                        <InputField
+                            value={info}
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setInfo(e.target.value)}
+                            name="other info"
+                            placeholder="other info" />
+                        <FileSelect
+                            onChange={handleFileChange}
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default Register;
