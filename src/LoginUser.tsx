@@ -32,8 +32,8 @@ const LoginUser = () => {
 
     return (
         <div className="w-full h-screen flex items-center justify-center relative" id="background">
-            <img className="h-screen" src={LoginJPG} alt="hand of a DJ on a disk" />
-            <div className="h-screen w-1/4 bg-black absolute flex justify-center items-center">
+            <img className="h-full bg-cover w-full" src={LoginJPG} alt="hand of a DJ on a disk" />
+            <div className="h-screen w-1/2 md:w-1/4 bg-black absolute flex justify-center items-center">
                 <div className="h-2/5 text-white w-3/4">
                     <h3 className="text-2xl mb-3 ">
                         login as
