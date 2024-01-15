@@ -13,7 +13,6 @@
 // ----------------
 
 interface Album {
-    id: number,
     title: string,
     date: Date,
     createdBy: number,
@@ -36,7 +35,6 @@ interface Artist extends Buzzer {
 }
 
 interface Creation {
-    id: number,
     date: Date,
     duration: number,
     createdBy: number,

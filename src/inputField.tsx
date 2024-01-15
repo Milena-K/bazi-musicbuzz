@@ -6,13 +6,14 @@ type InputProps = {
     name: string,
     placeholder: string,
     className?: string,
-    type?: string
+    type?: "date" | "number" | "password" | "email"
 }
 
 const InputField = (props: InputProps) => {
     return (
         <input
-            type={props.value}
+            type={props.type}
+            min="1"
             value={props.value}
             onChange={props.onChange}
             name={props.name}

@@ -11,7 +11,11 @@ import Register from './register';
 import Login from './Login';
 import LoginUser from './LoginUser';
 import Header from './Header';
+import UploadSong from './UploadSong';
+import UploadEpisode from './UploadEpisode';
 import Profile from './Profile';
+import CreatePodcast from './createPodcast';
+import CreateAlbum from './CreateAlbum';
 
 /*
 import Root, { rootLoader } from "./routes/root";
@@ -33,34 +37,40 @@ const router = createBrowserRouter([
         element: <App />,
     },
     {
-        // when the URL matches this segment
         path: "/login/artist",
-        // it renders this element
         element: <LoginUser />,
     },
     {
-        // when the URL matches this segment
         path: "/login/listener",
-        // it renders this element
         element: <LoginUser />,
     },
     {
-        // when the URL matches this segment
         path: "/profile",
-        // it renders this element
         element: <Profile />,
     },
     {
-        // when the URL matches this segment
         path: "/login",
-        // it renders this element
         element: <Login />,
     },
     {
-        // when the URL matches this segment
         path: "/register",
-        // it renders this element
         element: <Register />,
+    },
+    {
+        path: "/create/album",
+        element: <CreateAlbum />,
+    },
+    {
+        path: "/create/podcast",
+        element: <CreatePodcast />,
+    },
+    {
+        path: "/upload/episode",
+        element: <UploadEpisode />,
+    },
+    {
+        path: "/upload/song",
+        element: <UploadSong />,
     }
 ]);
 
