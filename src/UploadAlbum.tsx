@@ -5,7 +5,7 @@ import InputField from "./inputField"
 import SelectField from "./SelectField"
 
 
-const CreateAlbum = () => {
+const UploadAlbum = () => {
     const [title, setTitle] = useState("")
     const [recordLabel, setRecordLabel] = useState("rl1")
     const rlOptions = ["rl1", "rl2", "rl3", "rl4"]
@@ -56,4 +56,4 @@ const CreateAlbum = () => {
     )
 }
 
-export default CreateAlbum
+export default UploadAlbum

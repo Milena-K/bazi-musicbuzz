@@ -1,10 +1,19 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import Button from "./Button"
+import Table from "./Table"
 
 const Header = () => {
     const [showMenu, setShowMenu] = useState(false)
+    const [playlists, setPlaylists] = useState<string[]>([])
+    const [showPlaylists, setShowPlaylists] = useState(false)
     const buttonClass = "border w-max border-2 border-purple-400 rounded-lg bg-black text-black hover:font-bold"
+
+    useEffect(() => {
+        // get playlists from db
+        const res = ["playlist1", "playlist2", "playlist3"]
+        setPlaylists(res)
+    })
 
     return (
         <div>
@@ -20,35 +29,59 @@ const Header = () => {
                         </h3>
                     </div>
                     <div className="text-black flex justify-end items-center gap-3 relative">
-                        <Button label="playlists" onClick={() => {}} />
-                        <Button label="search" onClick={() => {}} />
-                        <Button label="upload" onClick={() => setShowMenu(!showMenu)} />
-                        {
-                            showMenu ?
-                                (
-                                    <div id="upload-menu"
-                                        className="absolute text-black top-28 bg-purple-300
+                        <div className="relative w-1/2">
+                            <Button label="playlists" className="w-full" onClick={() => { setShowPlaylists(!showPlaylists); setShowMenu(false) }} />
+                            {
+                                showPlaylists ?
+                                    (
+                                        <div className="absolute grid text-black mt-3 right-0 w-full
+                                            bg-white text-nowrap
+                                            align-items-end
+                                            rounded-md ">
+                                            {playlists.map(playlist =>
+                                                <Link to={"/playlist/" + playlist} className="p-3 rounded-md hover:bg-purple-300">
+                                                    <button className="w-full h-full" onClick={() => setShowPlaylists(false)} >
+                                                        {playlist}
+                                                    </button>
+                                                </Link>
+
+                                            )}
+                                        </div>
+                                    )
+                                    : null
+                            }
+                        </div>
+                        <Link className="w-1/2" to="/search">
+                            <Button className="w-full" label="search" onClick={() => {}} />
+                        </Link>
+                        <div className="relative w-1/2">
+                            <Button label="upload" className="w-full" onClick={() => { setShowMenu(!showMenu); setShowPlaylists(false) }} />
+                            {
+                                showMenu ?
+                                    (
+                                        <div id="upload-menu"
+                                            className="absolute text-black mt-3 bg-purple-300
                                              text-nowrap gap-5 p-5 align-items-end
-                                             w-96
+                                             w-96 right-0
                                              rounded-md grid grid-cols-2 grid-rows-2 ">
-                                        <Link to="/upload/song">
-                                            <Button className={buttonClass} label="upload a song" onClick={() => setShowMenu(!showMenu)} />
-                                        </Link>
-                                        <Link to="/upload/episode">
-                                            <Button className={buttonClass} label="upload an episode" onClick={() => setShowMenu(!showMenu)} />
-                                        </Link>
-                                        <Link to="/create/album">
-                                            <Button className={buttonClass} label="create an album" onClick={() => setShowMenu(!showMenu)} />
-                                        </Link>
-                                        <Link to="/create/podcast">
-                                            <Button className={buttonClass} label="create a podcast" onClick={() => setShowMenu(!showMenu)} />
-                                        </Link>
-                                    </div>
-                                ) : null
-                        }
+                                            <Link to="/upload/song">
+                                                <Button className={buttonClass} label="upload a song" onClick={() => setShowMenu(!showMenu)} />
+                                            </Link>
+                                            <Link to="/upload/episode">
+                                                <Button className={buttonClass} label="upload an episode" onClick={() => setShowMenu(!showMenu)} />
+                                            </Link>
+                                            <Link to="/create/album">
+                                                <Button className={buttonClass} label="create an album" onClick={() => setShowMenu(!showMenu)} />
+                                            </Link>
+                                            <Link to="/create/podcast">
+                                                <Button className={buttonClass} label="create a podcast" onClick={() => setShowMenu(!showMenu)} />
+                                            </Link>
+                                        </div>
+                                    ) : null
+                            }
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     )

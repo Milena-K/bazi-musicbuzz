@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import Search from './Search';
 import reportWebVitals from './reportWebVitals';
 import {
     createBrowserRouter,
@@ -16,6 +17,7 @@ import UploadEpisode from './UploadEpisode';
 import Profile from './Profile';
 import CreatePodcast from './createPodcast';
 import CreateAlbum from './CreateAlbum';
+import Playlists from './Playlists';
 
 /*
 import Root, { rootLoader } from "./routes/root";
@@ -49,12 +51,20 @@ const router = createBrowserRouter([
         element: <Profile />,
     },
     {
+        path: "/playlist/:playlistName",
+        element: <Playlists />,
+    },
+    {
         path: "/login",
         element: <Login />,
     },
     {
         path: "/register",
         element: <Register />,
+    },
+    {
+        path: "/search",
+        element: <Search />,
     },
     {
         path: "/create/album",

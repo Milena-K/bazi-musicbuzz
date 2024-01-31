@@ -7,22 +7,23 @@ import SelectField from "./SelectField"
 
 const CreatePodcast = () => {
     const [title, setTitle] = useState("")
-    const [file, setFile] = useState("")
+    const [category, setCategory] = useState("rl1")
+    const categoryOptions = ["cat1", "cat2", "cat3", "cat4"]
 
     // useEffect(() => {
     // const user = getUserData()
     // const rlabel = getRecord()
     //});
 
+
     const handleSubmit = () => {
         const userId = 5;
-        const rlId = 5;
+        const podcastId = 5;
 
-        const data: Album = {
+        const data: Podcast = {
             title,
-            date: new Date(),
             createdBy: userId,
-            recordLabelId: rlId
+            categoryId: categoryOptions.indexOf(category),
         }
 
     }
@@ -30,11 +31,24 @@ const CreatePodcast = () => {
     return (
         <div className="bg-black text-purple-300 min-h-screen  h-fit p-10">
             <Header />
-            <h1 className="mt-3 text-white text-bold text-5xl">Upload an <span className="text-purple-300"> podcast</span> </h1>
+            <h1 className="mt-3 text-white text-bold text-5xl">Create a <span className="text-purple-300"> podcast</span> </h1>
             <div className="w-1/2 flex gap-5 py-5 h-full">
                 <div className="h-full">
-                </div>
-                <div className="w-1/2">
+                    <InputField
+                        value={title}
+                        className="bg-transparent border-purple-300 border-2 placeholder:text-purple-300"
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
+                        name="title"
+                        placeholder="title" />
+                    <SelectField
+                        options={categoryOptions}
+                        value={category}
+                        className="bg-transparent border-purple-300 border-2 text-purple-300 "
+                        onChange={(value) => setCategory(value)}
+                    />
+                    <div className="flex justify-end mt-3">
+                        <Button className="text-black font-semibold" label="done" onClick={() => handleSubmit()} type="submit" />
+                    </div>
                 </div>
             </div>
         </div>

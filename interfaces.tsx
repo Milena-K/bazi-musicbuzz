@@ -57,7 +57,7 @@ interface Episode extends Creation {
 }
 
 interface Podcast {
-    id: number,
+    id?: number,
     title: string,
     categoryId: number,
     createdBy: number,
