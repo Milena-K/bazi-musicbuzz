@@ -1,5 +1,6 @@
 ### To start the app
-just run npm start
+npm install 
+npm start
 
 ### Paths available
 - "/" welcome page
