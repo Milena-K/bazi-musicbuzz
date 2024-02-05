@@ -29,7 +29,7 @@ const AddButton = ({ song }: propType) => {
         // get playlists from db
         const res = ["playlist1", "playlist2", "playlist3"]
         setPlaylists(res)
-    })
+    }, [])
 
 
     return (

@@ -18,6 +18,7 @@ import Profile from './Profile';
 import CreatePodcast from './createPodcast';
 import CreateAlbum from './CreateAlbum';
 import Playlists from './Playlists';
+import SearchContextProvider from './SearchContext';
 
 /*
 import Root, { rootLoader } from "./routes/root";
@@ -64,7 +65,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/search",
-        element: <Search />,
+        element: (<SearchContextProvider><Search /></SearchContextProvider>),
     },
     {
         path: "/create/album",

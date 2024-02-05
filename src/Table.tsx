@@ -1,42 +1,15 @@
 import { useEffect, useState } from "react"
 import AddButton from "./AddButton"
 
+
 type tableProps = {
     type: "search" | "playlist",
-    filter: string
+    filter?: string,
+    rows: resType[]
 }
 
-type resType = {
-    title: string,
-    genre?: string,
-    category?: string,
-    podcast?: string,
-    createdBy: number,
-    recordLabel?: number,
-}
 
-const Table = ({ type, filter }: tableProps) => {
-    const [rows, setRows] = useState<resType[]>()
-
-    useEffect(() => {
-        // get info from db
-        // const res = await search(filter)
-        const res: resType[] = [
-            {
-                title: "The Sliding Mr. Bones (Next Stop, Pottersville)",
-                genre: "Malcolm Lockyer",
-                createdBy: 1,
-                recordLabel: 3,
-            },
-            {
-                title: "The Sliding Mr. Bones (Next Stop, Pottersville)",
-                category: "Chat",
-                createdBy: 38,
-                podcast: "Hello Internet"
-            }
-        ]
-        setRows(res)
-    })
+const Table = ({ type, filter, rows }: tableProps) => {
 
     const tableRow = (
         <tr>
@@ -45,8 +18,12 @@ const Table = ({ type, filter }: tableProps) => {
             <td>1961</td>
             <td>1961</td>
             <td>1961</td>
-            <button className="p-2 mr-2 rounded-md bg-purple-300 hover:bg-purple-400 active:bg-purple-500 text-black">play</button>
-            <button className="p-2 rounded-md bg-purple-300 hover:bg-purple-400 active:bg-purple-500 text-black">add</button>
+            <td>
+                <button className="p-2 mr-2 rounded-md bg-purple-300 hover:bg-purple-400 active:bg-purple-500 text-black">play</button>
+            </td>
+            <td>
+                <button className="p-2 rounded-md bg-purple-300 hover:bg-purple-400 active:bg-purple-500 text-black">add</button>
+            </td>
         </tr>
     )
 
@@ -68,7 +45,7 @@ const Table = ({ type, filter }: tableProps) => {
             <tbody>
                 {
                     rows?.map(row => (
-                        <tr>
+                        <tr key={row.title + row.category}>
                             <td>{row.title}</td>
                             <td>{row.genre} {row.category}</td>
                             <td>{row.createdBy}</td>
@@ -78,10 +55,14 @@ const Table = ({ type, filter }: tableProps) => {
                                     <td>{row.podcast}</td>
                                     : null
                             }
-                            <button className="p-2 mr-2 rounded-md bg-purple-300 hover:bg-purple-400 active:bg-purple-500 text-black">play</button>
+                            <td>
+                                <button className="p-2 rounded-md bg-purple-300 hover:bg-purple-400 active:bg-purple-500 text-black">play</button>
+                            </td>
                             {
                                 row.genre ?
-                                    <AddButton song={row} />
+                                    <td>
+                                        <AddButton song={row} />
+                                    </td>
                                     : null
                             }
                         </tr>

@@ -1,4 +1,6 @@
-const url = "some/url/users"
+
+
+const url = "some/url/users" // TODO: create env vars
 
 function login_user(userData: { username: string, password: string, isArtist: boolean }): Promise<Array<Buzzer>> {
     return fetch(url)
