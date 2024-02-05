@@ -13,7 +13,7 @@ const Header = () => {
         // get playlists from db
         const res = ["playlist1", "playlist2", "playlist3"]
         setPlaylists(res)
-    })
+    }, [])
 
     return (
         <div>

@@ -113,3 +113,13 @@ interface RecordLabel {
     id: number,
     name: string
 }
+
+type resType = {
+    title: string,
+    genre?: string,
+    category?: string,
+    podcast?: string,
+    createdBy: number,
+    recordLabel?: number,
+}
+
