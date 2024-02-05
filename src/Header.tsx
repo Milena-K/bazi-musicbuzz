@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
+import { AuthContext } from "./AuthContext"
 import Button from "./Button"
 import Table from "./Table"
 
@@ -8,6 +9,7 @@ const Header = () => {
     const [playlists, setPlaylists] = useState<string[]>([])
     const [showPlaylists, setShowPlaylists] = useState(false)
     const buttonClass = "border w-max border-2 border-purple-400 rounded-lg bg-black text-black hover:font-bold"
+    const { logout } = useContext(AuthContext)
 
     useEffect(() => {
         // get playlists from db
@@ -18,9 +20,11 @@ const Header = () => {
     return (
         <div>
             <div className="flex flex-col items-center justify-center ">
-                <h3 className="text-blue-400 text-center text-3xl ">
-                    musicbuzz
-                </h3>
+                <Link to="/profile">
+                    <h3 className="text-blue-400 text-center text-3xl ">
+                        musicbuzz
+                    </h3>
+                </Link>
                 <div className="grid w-full justify-end grid-cols-3">
                     <div></div>
                     <div className="rounded-full bg-blue-400 h-24 w-24 mt-3 text-black text-center justify-self-center ">
@@ -80,6 +84,7 @@ const Header = () => {
                                     ) : null
                             }
                         </div>
+                        <Button label="logout" onClick={() => logout()} />
                     </div>
                 </div>
             </div>

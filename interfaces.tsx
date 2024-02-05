@@ -19,12 +19,24 @@ interface Album {
     recordLabelId: number
 }
 
+
+/*
+{
+  "user_name": "string",
+  "user_email": "user@example.com",
+  "user_type": "artist",
+  "user_id": 0,
+  "user_image": "string",
+  "user_country": "string"
+}
+
+*/
 interface Buzzer {
-    username: string,
-    password: string,
-    email: string,
-    image: string,
-    country: string,
+    user_name: string,
+    user_email: string,
+    user_id?: number,
+    user_image: string,
+    user_country: string,
 }
 
 interface Listener extends Buzzer {

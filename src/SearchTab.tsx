@@ -75,14 +75,16 @@ const SearchTab = ({ data }: SearchTabProps) => {
             <div className="w-full flex p-3">
                 <InputField
                     value={filter}
-                    className="bg-transparent border-purple-300 border-2 placeholder:text-purple-300"
+                    className="bg-transparent h-12 border-purple-300 border-2 placeholder:text-purple-300 mt-0 mr-2"
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setFilter(e.target.value)}
                     name="title"
                     placeholder="search" />
-                <button onClick={handleSearch} className="bg-purple-300 text-black rounded-lg p-3">search</button>
+                <button onClick={handleSearch} className="bg-purple-300 text-black rounded-lg h-12 p-3">search</button>
             </div>
         </div>
     )
 }
 
 export default SearchTab
+
+// TODO: get cu ic auth

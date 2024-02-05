@@ -19,6 +19,7 @@ import CreatePodcast from './createPodcast';
 import CreateAlbum from './CreateAlbum';
 import Playlists from './Playlists';
 import SearchContextProvider from './SearchContext';
+import { AuthContext, AuthProvider } from './AuthContext';
 
 /*
 import Root, { rootLoader } from "./routes/root";
@@ -40,13 +41,14 @@ const router = createBrowserRouter([
         element: <App />,
     },
     {
-        path: "/login/artist",
+        path: "/login",
         element: <LoginUser />,
     },
     {
-        path: "/login/listener",
-        element: <LoginUser />,
+        path: "/register",
+        element: <Register />,
     },
+    // protected with auth
     {
         path: "/profile",
         element: <Profile />,
@@ -54,14 +56,6 @@ const router = createBrowserRouter([
     {
         path: "/playlist/:playlistName",
         element: <Playlists />,
-    },
-    {
-        path: "/login",
-        element: <Login />,
-    },
-    {
-        path: "/register",
-        element: <Register />,
     },
     {
         path: "/search",
@@ -91,7 +85,9 @@ const root = ReactDOM.createRoot(
 
 root.render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+        <AuthProvider>
+            <RouterProvider router={router} />
+        </AuthProvider>
     </React.StrictMode>
 );
 

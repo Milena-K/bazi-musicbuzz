@@ -1,21 +1,31 @@
+const api_url = process.env.REACT_APP_API_URL_LOCAL
+const url = "/"
 
+function login_user(userData: { user_name: string, user_password: string }): Promise<{ session_uuid: "string" }> {
 
-const url = "some/url/users" // TODO: create env vars
+    console.log(JSON.stringify(userData))
+    return fetch("http://localhost:8000/login",
+        {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            method: "POST",
+            body: JSON.stringify(userData)
+        }
+    ).then((res) => res.json()).catch((err) => {
+        console.log(err)
+    })
 
-function login_user(userData: { username: string, password: string, isArtist: boolean }): Promise<Array<Buzzer>> {
-    return fetch(url)
-        .then((res) => res.json())
-        .catch((err) => {
-            console.log(err)
-        })
 }
 
-function fetch_users(): Promise<Array<Buzzer>> {
-    return fetch(url)
-        .then(res => res.json())
-        .catch((err) => {
-            console.log(err)
-        })
+function get_user_info(sessionUuid: string): Promise<Buzzer> {
+    return fetch("http://localhost:8000/profile", {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(res => res.json()).catch((err) => {
+        console.log(err)
+    })
 }
 
 function create_user(userData: Buzzer) {
@@ -112,4 +122,4 @@ function create_podcast(podcast: Podcast) {
 
 
 
-export { fetch_users, create_user, upload_episode, upload_song, login_user }
+export { get_user_info, create_user, upload_episode, upload_song, login_user }
