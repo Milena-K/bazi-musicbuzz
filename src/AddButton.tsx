@@ -1,51 +1,62 @@
-import { useEffect, useState } from "react"
-
-type resType = {
-    title: string,
-    genre?: string,
-    category?: string,
-    podcast?: string,
-    createdBy: number,
-    recordLabel?: number,
-}
+import { useContext, useEffect, useState } from "react"
+import { add_song_to_playlist, get_playlists } from "./api/creation"
+import { AuthContext } from "./AuthContext"
 
 type propType = {
-    song: resType
+    song_id: number
 }
 
-const AddButton = ({ song }: propType) => {
 
-    const [playlists, setPlaylists] = useState<string[]>([])
+const AddButton = ({ song_id }: propType) => {
+
+    const [playlists, setPlaylists] = useState<PlaylistInfo[]>()
     const [showMenu, setShowMenu] = useState(false)
+    const { sessionUuid } = useContext(AuthContext)
 
-    const addToPlaylist = (playlist: string) => {
-        // call db to add song to playlist
+    const addToPlaylist = (playlist_id: number) => {
         const data = {
-
+            playlist_id,
+            song_id,
+        }
+        const sessionUuid = window.localStorage.getItem("sessionUuid")
+        if (sessionUuid) {
+            console.log(`sessionUuid: ${sessionUuid}`)
+            console.log(data)
+            add_song_to_playlist(data, sessionUuid).then(res => console.log(res))
         }
     }
 
     useEffect(() => {
-        // get playlists from db
-        const res = ["playlist1", "playlist2", "playlist3"]
-        setPlaylists(res)
+        if (sessionUuid) {
+            get_playlists(sessionUuid).then((res: PlaylistRes[]) => {
+                const data = res.map(r => ({
+                    id: r.playlist_id,
+                    name: r.playlist_name
+                }))
+                setPlaylists(data)
+            })
+        }
     }, [])
-
 
     return (
 
         <div className="inline-block relative">
             <button
                 onClick={() => setShowMenu(!showMenu)}
-                className="p-2 rounded-md bg-purple-300 hover:bg-purple-400 active:bg-purple-500 text-black">add</button>
+                className="p-2 rounded-md bg-purple-300
+                            hover:bg-purple-400 active:bg-purple-500
+                            text-black">add</button>
             {
                 showMenu ?
                     <div className="absolute grid text-black mt-3 right-0 min-w-32
-                            bg-white text-nowrap
-                            align-items-end
+                            bg-white text-nowrap z-10
+                            align-items-end overflow-y-scroll h-60
                             rounded-md ">
-                        {playlists.map(playlist =>
-                            <button onClick={() => { addToPlaylist(playlist); setShowMenu(false) }} className="p-3 rounded-md hover:bg-purple-300">{playlist}</button>
+                        {playlists?.map(playlist =>
+                            <button key={playlist.id}
+                                onClick={() => addToPlaylist(playlist.id)}
+                                className="p-3 rounded-md hover:bg-purple-300">
+                                {playlist.name}</button>
                         )}
                     </div>
                     : null
@@ -55,4 +66,5 @@ const AddButton = ({ song }: propType) => {
     )
 }
 
+// addToPlaylist(playlist); setShowMenu(false)
 export default AddButton

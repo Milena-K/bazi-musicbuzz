@@ -1,5 +1,5 @@
 import { ChangeEvent, useContext, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { login_user } from "./api/users";
 import Button from "./Button";
 import InputField from "./inputField";
@@ -13,16 +13,18 @@ const LoginUser = () => {
     const [username, setUsername] = useState("")
     const [pass, setPass] = useState("")
     const { login } = useContext(AuthContext)
+    const navigate = useNavigate()
 
     const handleSubmit = async () => {
         const data = {
             user_name: username,
             user_password: pass,
         }
-        const loginData = await login_user(data)
-        if (loginData) {
-            login(loginData.session_uuid)
-        }
+        login_user(data).then((data) => {
+            login(data.session_uuid)
+            navigate("/profile")
+            console.log("navigating")
+        })
     }
 
     return (

@@ -1,7 +1,7 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react"
 import Header from "./Header"
 import InputField from "./inputField"
-import { useMyContext } from "./SearchContext";
+import { useSearchContext } from "./SearchContext";
 import SearchTab from "./SearchTab";
 import Table from "./Table"
 
@@ -16,9 +16,8 @@ type CheckedItems = {
 
 
 const Search = () => {
-    const [rows, setRows] = useState<resType[]>()
     const [checkedItems, setCheckedItems] = useState<CheckedItems>({});
-    const { filter } = useMyContext()
+    const { filter, creations } = useSearchContext()
     const data = ["rock", "pop", "edm", "classical"]
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -28,9 +27,7 @@ const Search = () => {
         });
     };
 
-    useEffect(() => {
-        // get info from db
-        // const res = await search(filter)
+    /*
         const res: resType[] = [
             {
                 title: "The Sliding Mr. Bones (Next Stop, Pottersville)",
@@ -45,8 +42,7 @@ const Search = () => {
                 podcast: "Hello Internet"
             }
         ]
-        setRows(res)
-    }, [])
+    */
 
     return (
         <div className="bg-black text-purple-300 min-h-screen  h-fit p-10">
@@ -56,8 +52,8 @@ const Search = () => {
                 <SearchTab data={data} />
             </div>
             {
-                rows ?
-                    <Table type="search" filter={filter} rows={rows} />
+                creations ?
+                    <Table showPodcast={true} filter={filter} rows={creations} />
                     : null
             }
         </div>

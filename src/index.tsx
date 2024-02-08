@@ -19,6 +19,7 @@ import CreatePodcast from './createPodcast';
 import CreateAlbum from './CreateAlbum';
 import Playlists from './Playlists';
 import SearchContextProvider from './SearchContext';
+import ProtectedRoute from './ProtectedRoute';
 import { AuthContext, AuthProvider } from './AuthContext';
 
 /*
@@ -51,7 +52,7 @@ const router = createBrowserRouter([
     // protected with auth
     {
         path: "/profile",
-        element: <Profile />,
+        element: (<ProtectedRoute><Profile /></ProtectedRoute>),
     },
     {
         path: "/playlist/:playlistName",

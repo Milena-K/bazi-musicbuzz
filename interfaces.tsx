@@ -34,9 +34,11 @@ interface Album {
 interface Buzzer {
     user_name: string,
     user_email: string,
+    user_password?: string,
     user_id?: number,
     user_image: string,
     user_country: string,
+    user_type?: "artist" | "listener"
 }
 
 interface Listener extends Buzzer {
@@ -50,6 +52,41 @@ interface Creation {
     date: Date,
     duration: number,
     createdBy: number,
+}
+
+/// TODO: add the real values for the episode response
+interface EpisodeRes {
+    podcast_id: number
+    episode_description: string
+    episode_title: string
+    episode_file: string
+    episode_number: number
+    episode_duration: number
+    episode_id: number
+}
+
+interface SongRes {
+    album_id: number,
+    rlabel_id: number,
+    lyrics: string,
+    song_title: string,
+    song_file: string,
+    song_duration: number,
+    song_date: Date,
+    genres: string[],
+    song_id: number
+}
+
+interface PlaylistRes {
+    playlist_name: string,
+    playlist_description: string,
+    playlist_id: number,
+    created_by: number
+}
+
+type PlaylistInfo = {
+    id: number,
+    name: string
 }
 
 interface Song extends Creation {

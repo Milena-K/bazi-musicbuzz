@@ -1,20 +1,28 @@
 import { useContext, useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { get_playlists } from "./api/creation"
 import { AuthContext } from "./AuthContext"
 import Button from "./Button"
 import Table from "./Table"
 
 const Header = () => {
     const [showMenu, setShowMenu] = useState(false)
-    const [playlists, setPlaylists] = useState<string[]>([])
+    const [playlists, setPlaylists] = useState<PlaylistInfo[]>([])
     const [showPlaylists, setShowPlaylists] = useState(false)
     const buttonClass = "border w-max border-2 border-purple-400 rounded-lg bg-black text-black hover:font-bold"
-    const { logout } = useContext(AuthContext)
+    const { logout, sessionUuid } = useContext(AuthContext)
+    const navigate = useNavigate()
 
     useEffect(() => {
-        // get playlists from db
-        const res = ["playlist1", "playlist2", "playlist3"]
-        setPlaylists(res)
+        if (sessionUuid) {
+            get_playlists(sessionUuid).then(res => {
+                const data = res.map(r => ({
+                    name: r.playlist_name,
+                    id: r.playlist_id
+                }))
+                setPlaylists(data)
+            })
+        }
     }, [])
 
     return (
@@ -38,14 +46,16 @@ const Header = () => {
                             {
                                 showPlaylists ?
                                     (
-                                        <div className="absolute grid text-black mt-3 right-0 w-full
-                                            bg-white text-nowrap
-                                            align-items-end
+                                        <div className="absolute grid text-black mt-3 right-0
+                                            bg-white text-nowrap z-10
+                                            align-items-end overflow-y-scroll h-60
                                             rounded-md ">
                                             {playlists.map(playlist =>
-                                                <Link to={"/playlist/" + playlist} className="p-3 rounded-md hover:bg-purple-300">
+                                                <Link to={"/playlist/" + playlist.id}
+                                                    className="p-3 rounded-md hover:bg-purple-300"
+                                                    key={playlist.id}>
                                                     <button className="w-full h-full" onClick={() => setShowPlaylists(false)} >
-                                                        {playlist}
+                                                        {playlist.name}
                                                     </button>
                                                 </Link>
 
@@ -84,7 +94,7 @@ const Header = () => {
                                     ) : null
                             }
                         </div>
-                        <Button label="logout" onClick={() => logout()} />
+                        <Button label="logout" onClick={() => { logout(); navigate("/") }} />
                     </div>
                 </div>
             </div>

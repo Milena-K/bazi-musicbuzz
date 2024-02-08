@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react"
 import InputField from "./inputField"
-import { useMyContext } from "./SearchContext"
+import { useSearchContext } from "./SearchContext"
 import { CreationType } from "./enums"
 import Button from "./Button"
 import { get_episodes, get_songs } from "./api/creation"
@@ -12,7 +12,7 @@ type SearchTabProps = {
 const SearchTab = ({ data }: SearchTabProps) => {
 
     const [activeTab, setActiveTab] = useState<CreationType>(CreationType.Song)
-    const { filter, setFilter, fields, setFields, setCreations } = useMyContext();
+    const { filter, setFilter, fields, setFields, setCreations } = useSearchContext();
 
     const handleSelect = (value: string) => {
         if (fields.has(value)) {
@@ -35,22 +35,14 @@ const SearchTab = ({ data }: SearchTabProps) => {
     };
 
     const handleSearch = async () => {
-        let result;
         if (activeTab == CreationType.Song) {
-            result = await get_songs(fields, filter)
+            console.log("inside song")
+            get_songs(fields, filter).then((songs: SongRes[]) => { setCreations(songs); console.log(songs) })
         } else {
-            result = await get_episodes(fields, filter)
+            get_episodes(fields, filter).then((episodes) => { setCreations(episodes); console.log(episodes) })
         }
-
-        console.log(result)
-        /* if (result) {
-*     setCreations(result)
-* } */
     }
 
-    /* useEffect(() => {
-     * })
-     */
 
     return (
         <div className="w-1/2 border rounded-lg border-purple-300">
@@ -75,11 +67,11 @@ const SearchTab = ({ data }: SearchTabProps) => {
             <div className="w-full flex p-3">
                 <InputField
                     value={filter}
-                    className="bg-transparent h-12 border-purple-300 border-2 placeholder:text-purple-300 mt-0 mr-2"
+                    className="bg-transparent h-12 border-purple-300 border-2 placeholder:text-purple-300 mr-2"
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setFilter(e.target.value)}
                     name="title"
                     placeholder="search" />
-                <button onClick={handleSearch} className="bg-purple-300 text-black rounded-lg h-12 p-3">search</button>
+                <button onClick={handleSearch} className="bg-purple-300 text-black rounded-lg h-12 p-3 mt-2.5">search</button>
             </div>
         </div>
     )
@@ -87,4 +79,3 @@ const SearchTab = ({ data }: SearchTabProps) => {
 
 export default SearchTab
 
-// TODO: get cu ic auth

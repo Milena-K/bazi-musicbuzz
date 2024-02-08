@@ -3,13 +3,13 @@ import AddButton from "./AddButton"
 
 
 type tableProps = {
-    type: "search" | "playlist",
+    showPodcast: boolean,
     filter?: string,
-    rows: resType[]
+    rows: EpisodeRes[] | SongRes[]
 }
 
 
-const Table = ({ type, filter, rows }: tableProps) => {
+const Table = ({ showPodcast, filter, rows }: tableProps) => {
 
     const tableRow = (
         <tr>
@@ -28,15 +28,15 @@ const Table = ({ type, filter, rows }: tableProps) => {
     )
 
     return (
-        <table className="text-white table-auto border-separate border-spacing-4 " >
+        <table className="text-white table-auto w-full border-separate border-spacing-4 " >
             <thead>
                 <tr>
                     <th>Title</th>
-                    <th>Genre / Category</th>
+                    <th>Genre</th>
                     <th>Created By</th>
                     <th>Record Label</th>
                     {
-                        type == "search" ?
+                        showPodcast ?
                             <th>Podcast</th>
                             : null
                     }
@@ -44,24 +44,30 @@ const Table = ({ type, filter, rows }: tableProps) => {
             </thead>
             <tbody>
                 {
-                    rows?.map(row => (
-                        <tr key={row.title + row.category}>
-                            <td>{row.title}</td>
-                            <td>{row.genre} {row.category}</td>
-                            <td>{row.createdBy}</td>
-                            <td>{row.recordLabel}</td>
+                    rows?.map((row: SongRes | EpisodeRes) => (
+                        <tr key={"song_id" in row ? row.song_id : row.episode_id}>
+                            <td>{"song_title" in row ? row.song_title : row.episode_title}</td>
+                            <td>
+                                {"genres" in row ?
+                                    row.genres
+                                    : null
+                                }
+                            </td>
+                            <td></td>
+                            {/* <td>{row.createdBy}</td> */}
+                            <td>{"rlabel_id" in row ? row.rlabel_id : ""}</td>
                             {
-                                type == "search" ?
-                                    <td>{row.podcast}</td>
+                                showPodcast ?
+                                    <td>{"podcast_id" in row ? row.podcast_id : ""}</td>
                                     : null
                             }
                             <td>
                                 <button className="p-2 rounded-md bg-purple-300 hover:bg-purple-400 active:bg-purple-500 text-black">play</button>
                             </td>
                             {
-                                row.genre ?
+                                "genres" in row ?
                                     <td>
-                                        <AddButton song={row} />
+                                        <AddButton song_id={row.song_id} />
                                     </td>
                                     : null
                             }
