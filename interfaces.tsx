@@ -54,7 +54,6 @@ interface Creation {
     createdBy: number,
 }
 
-/// TODO: add the real values for the episode response
 interface EpisodeRes {
     podcast_id: number
     episode_description: string
@@ -72,9 +71,23 @@ interface SongRes {
     song_title: string,
     song_file: string,
     song_duration: number,
-    song_date: Date,
+    song_date: string,
     genres: string[],
     song_id: number
+}
+
+interface AlbumRes {
+    album_title: string,
+    al_created_by: number,
+    rlabel_id: number,
+    album_id: number
+}
+
+interface PodcastRes {
+    podcast_id: number,
+    podcast_title: string,
+    category_id: number,
+    created_by: number
 }
 
 interface PlaylistRes {
@@ -82,6 +95,16 @@ interface PlaylistRes {
     playlist_description: string,
     playlist_id: number,
     created_by: number
+}
+
+interface EpisodeRes {
+    podcast_id: number,
+    episode_description: string,
+    episode_title: string,
+    episode_file: string,
+    episode_number: number,
+    episode_duration: number,
+    episode_id: number
 }
 
 type PlaylistInfo = {
@@ -120,8 +143,8 @@ interface Playlist {
 }
 
 interface Category {
-    id: number,
-    name: string,
+    category_id: number,
+    category_name: string,
 }
 
 interface Reaction {
@@ -154,8 +177,8 @@ interface Continent {
 }
 
 interface Genre {
-    id: number,
-    name: string,
+    genre_id: number,
+    genre_name: string,
 }
 
 interface RecordLabel {

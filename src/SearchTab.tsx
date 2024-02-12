@@ -1,18 +1,27 @@
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useContext, useState } from "react"
 import InputField from "./inputField"
 import { useSearchContext } from "./SearchContext"
 import { CreationType } from "./enums"
 import Button from "./Button"
-import { get_episodes, get_songs } from "./api/creation"
+import { get_albums, get_episodes, get_podcasts, get_songs } from "./api/creation"
+import { AuthContext } from "./AuthContext"
 
 type SearchTabProps = {
-    data: string[]
+    categories: Category[]
+    genres: Genre[]
 }
 
-const SearchTab = ({ data }: SearchTabProps) => {
+const SearchTab = ({ categories, genres }: SearchTabProps) => {
 
-    const [activeTab, setActiveTab] = useState<CreationType>(CreationType.Song)
-    const { filter, setFilter, fields, setFields, setCreations } = useSearchContext();
+    const { filter,
+        setFilter,
+        activeTab,
+        setActiveTab,
+        fields,
+        setFields,
+        setCreations,
+        setCollections } = useSearchContext();
+    const { sessionUuid } = useContext(AuthContext)
 
     const handleSelect = (value: string) => {
         if (fields.has(value)) {
@@ -36,33 +45,58 @@ const SearchTab = ({ data }: SearchTabProps) => {
 
     const handleSearch = async () => {
         if (activeTab == CreationType.Song) {
-            console.log("inside song")
-            get_songs(fields, filter).then((songs: SongRes[]) => { setCreations(songs); console.log(songs) })
+            if (sessionUuid) {
+                get_songs(fields, filter, sessionUuid)
+                    .then((songs: SongRes[]) => setCreations(songs))
+                get_albums(fields, filter, sessionUuid)
+                    .then((albums: AlbumRes[]) => setCollections(albums))
+            }
         } else {
-            get_episodes(fields, filter).then((episodes) => { setCreations(episodes); console.log(episodes) })
+            if (sessionUuid) {
+                get_episodes(fields, filter, sessionUuid)
+                    .then((episodes) => setCreations(episodes))
+                get_podcasts(fields, filter, sessionUuid)
+                    .then((podcasts: PodcastRes[]) => setCollections(podcasts))
+            }
         }
+    }
+
+    const switchTab = (tab: CreationType) => {
+        setActiveTab(tab)
+        setFields(new Set())
+        setCollections([])
+        setCreations([])
     }
 
 
     return (
         <div className="w-1/2 border rounded-lg border-purple-300">
             <div className="text-center grid grid-cols-2 justify-items-stretch">
-                <button onClick={() => { setActiveTab(CreationType.Song); setFields(new Set()) }} className={activeTab == CreationType.Song ? "bg-purple-300 text-black rounded-l-md" : ""}>
-                    songs
+                <button onClick={() => switchTab(CreationType.Song)} className={activeTab == CreationType.Song ? "bg-purple-300 text-black rounded-l-md" : ""}>
+                    music
                 </button>
-                <button onClick={() => { setActiveTab(CreationType.Podcast); setFields(new Set()) }} className={activeTab == CreationType.Podcast ? "bg-purple-300 text-black rounded-r-md" : ""}>
-                    podcasts
+                <button onClick={() => switchTab(CreationType.Podcast)} className={activeTab == CreationType.Podcast ? "bg-purple-300 text-black rounded-r-md" : ""}>
+                    podcast
                 </button>
             </div>
             <div className="grid grid-cols-2 text-center gap-3 p-3">
                 {
-                    data.map(value =>
-                        <button onClick={() => handleSelect(value)}
-                            key={value}
-                            className={!fields.has(value) ? "border border-purple-300 rounded" : "border border-purple-300 rounded text-black bg-purple-300"}>
-                            {value}
-                        </button>
-                    )}
+                    activeTab == CreationType.Song ?
+                        genres.map(value =>
+                            <button onClick={() => handleSelect(value.genre_name)}
+                                key={value.genre_id}
+                                className={!fields.has(value.genre_name) ? "border border-purple-300 rounded" : "border border-purple-300 rounded text-black bg-purple-300"}>
+                                {value.genre_name}
+                            </button>
+                        )
+                        : categories.map(value =>
+                            <button onClick={() => handleSelect(value.category_name)}
+                                key={value.category_id}
+                                className={!fields.has(value.category_name) ? "border border-purple-300 rounded" : "border border-purple-300 rounded text-black bg-purple-300"}>
+                                {value.category_name}
+                            </button>
+                        )
+                }
             </div>
             <div className="w-full flex p-3">
                 <InputField
@@ -78,4 +112,3 @@ const SearchTab = ({ data }: SearchTabProps) => {
 }
 
 export default SearchTab
-

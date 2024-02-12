@@ -1,0 +1,12 @@
+#+title: TODO
+
+
+* TODO
+** SearchTab
+- [ ] make get request in the search tab for episodes
+- [ ] pull the episode categories
+- [ ] insert two tables based on what tab is selected (album/song or episode/podcast)
+
+** Docker
+- [ ] fix issues with cpu 100% usage and sudden killing of web image
+- [ ] dockerize the whole app

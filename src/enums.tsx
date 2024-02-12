@@ -1,6 +1,6 @@
 export enum CreationType {
     Song = 1,
-    Podcast
+    Podcast,
 }
 
 export enum Country {

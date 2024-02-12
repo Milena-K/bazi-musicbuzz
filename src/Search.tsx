@@ -1,59 +1,50 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react"
+import { get_categories, get_genres } from "./api/creation";
+import { AuthContext } from "./AuthContext";
+import { CreationType } from "./enums";
 import Header from "./Header"
 import InputField from "./inputField"
 import { useSearchContext } from "./SearchContext";
 import SearchTab from "./SearchTab";
-import Table from "./Table"
-
-type CheckedItems = {
-    title?: boolean;
-    genre?: boolean;
-    category?: boolean;
-    createdBy?: boolean;
-    recordLabel?: boolean;
-    podcast?: boolean;
-};
-
+import Table from "./Table.new"
 
 const Search = () => {
-    const [checkedItems, setCheckedItems] = useState<CheckedItems>({});
-    const { filter, creations } = useSearchContext()
-    const data = ["rock", "pop", "edm", "classical"]
-
-    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setCheckedItems({
-            ...checkedItems,
-            [event.target.name]: event.target.checked,
-        });
-    };
-
-    /*
-        const res: resType[] = [
-            {
-                title: "The Sliding Mr. Bones (Next Stop, Pottersville)",
-                genre: "Malcolm Lockyer",
-                createdBy: 1,
-                recordLabel: 3,
-            },
-            {
-                title: "The Sliding Mr. Bones (Next Stop, Pottersville)",
-                category: "Chat",
-                createdBy: 38,
-                podcast: "Hello Internet"
-            }
-        ]
-    */
+    const { creations, collections, activeTab } = useSearchContext()
+    const [categories, setCategories] = useState<Category[]>([])
+    const [genres, setGenres] = useState<Genre[]>([])
+    const { sessionUuid } = useContext(AuthContext)
+    useEffect(() => {
+        if (sessionUuid) {
+            get_categories(sessionUuid).then(res => { setCategories(res); console.log(res) })
+            get_genres(sessionUuid).then(res => setGenres(res))
+        }
+    }, [])
 
     return (
         <div className="bg-black text-purple-300 min-h-screen  h-fit p-10">
             <Header />
             <div>
                 <h1 className="my-3 text-white text-bold text-5xl">Search</h1>
-                <SearchTab data={data} />
+                <SearchTab categories={categories} genres={genres} />
             </div>
+            <h1 className="my-3 text-white text-bold text-5xl">
+                {
+                    activeTab == CreationType.Song ? "Songs" : "Episodes"
+                }
+            </h1>
             {
                 creations ?
-                    <Table showPodcast={true} filter={filter} rows={creations} />
+                    <Table rows={creations} />
+                    : null
+            }
+            <h1 className="my-3 text-white text-bold text-5xl">
+                {
+                    activeTab == CreationType.Song ? "Albums" : "Podcasts"
+                }
+            </h1>
+            {
+                collections ?
+                    <Table rows={collections} />
                     : null
             }
         </div>
