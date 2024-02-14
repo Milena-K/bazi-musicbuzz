@@ -5,8 +5,7 @@
 - [ ] get every song in playlist and show it
 - [ ] get song genres instead of null when searching songs
 - [ ] the search is case sensitive
-- [ ] only listeners can create and add to playlists
+
 
 ** Docker
-- [ ] fix issues with cpu 100% usage and sudden killing of web image
 - [ ] dockerize the whole app

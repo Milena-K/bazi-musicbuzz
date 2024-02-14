@@ -43,9 +43,11 @@ const SearchTab = ({ categories, genres }: SearchTabProps) => {
         setFields(newFields);
     };
 
-    const handleSearch = async () => {
+    const handleSearch = () => {
         if (activeTab == CreationType.Song) {
             if (sessionUuid) {
+                console.log(fields)
+                console.log(filter)
                 get_songs(fields, filter, sessionUuid)
                     .then((songs: SongRes[]) => setCreations(songs))
                 get_albums(fields, filter, sessionUuid)

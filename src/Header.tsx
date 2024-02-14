@@ -38,11 +38,9 @@ const Header = () => {
                 <div className="grid w-full justify-end grid-cols-3">
                     <div></div>
                     <div className="rounded-full bg-blue-400 h-24 w-24 mt-3 text-black text-center justify-self-center ">
-                        <h3 className="h-fit mt-5">
-                            pp
-                        </h3>
+                        <img src={user?.user_image} className={"w-full h-full rounded-full"} />
                     </div>
-                    <div className="text-black flex justify-end items-center gap-3 relative">
+                    <div className="text-black flex justify-end items-center gap-3 relative object-fit">
                         {
                             user && user.user_type == 'listener' &&
                             <div className="relative w-1/2">
@@ -78,7 +76,7 @@ const Header = () => {
                             <Button className="w-full" label="search" onClick={() => {}} />
                         </Link>
                         <div className="relative w-1/2">
-                            <Button label="upload" className="w-full" onClick={() => { setShowMenu(!showMenu); setShowPlaylists(false) }} />
+                            <Button label="create" className="w-full" onClick={() => { setShowMenu(!showMenu); setShowPlaylists(false) }} />
                             {
                                 showMenu ?
                                     (

@@ -9,7 +9,7 @@ import SelectField from "./SelectField"
 
 const UploadSong = () => {
     const [title, setTitle] = useState("")
-    const [duration, setDuration] = useState(0)
+    const [duration, setDuration] = useState<number>()
     const [file, setFile] = useState("")
     const [message, setMessage] = useState<string>("")
     const [lyrics, setLyrics] = useState("")
@@ -44,7 +44,7 @@ const UploadSong = () => {
         const albumOp = albumOptions.find(al => al.album_title == album)
         const rlabelOp = rlOptions.find(rl => rl.rlabel_name == recordLabel)
 
-        if (albumOp && rlabelOp && sessionUuid && albumOp) {
+        if (albumOp && rlabelOp && sessionUuid && duration && albumOp) {
             const data: SongRes = {
                 album_id: albumOp.album_id,
                 rlabel_id: rlabelOp?.rlabel_id,

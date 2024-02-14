@@ -16,6 +16,7 @@ const CreatePlaylist = () => {
 
 
     const handleSubmit = () => {
+        console.log(title)
         const data = {
             playlist_name: title,
             playlist_description: desc,

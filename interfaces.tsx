@@ -130,6 +130,7 @@ interface Playlist {
     playlist_name: string,
     playlist_description: string,
     created_by: number
+    songs?: SongRes[]
 }
 
 interface Category {

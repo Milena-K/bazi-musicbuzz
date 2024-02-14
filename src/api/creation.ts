@@ -49,7 +49,7 @@ async function get_podcasts(categories: Set<string>, searchString: string, sessi
 
 async function get_albums(genres: Set<string>, searchString: string, sessionUuid: string): Promise<AlbumRes[]> {
     let genres_query = ''
-    if (!genres) {
+    if (genres) {
         genres_query = Array.from(genres).map(genre => `genres=${genre}&`).join("")
     }
     let query = genres_query
@@ -75,7 +75,7 @@ async function get_albums(genres: Set<string>, searchString: string, sessionUuid
 // QUESTION: kako da go napravime searchot da ne e case sensitive?
 async function get_songs(genres: Set<string>, searchString: string, sessionUuid: string): Promise<SongRes[]> {
     let genres_query = ''
-    if (!genres) {
+    if (genres) {
         genres_query = Array.from(genres).map(genre => `genres=${genre}&`).join("")
     }
     let query = genres_query

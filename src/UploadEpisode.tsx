@@ -10,6 +10,7 @@ import SelectField from "./SelectField"
 const UploadEpisode = () => {
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
+    const [duration, setDuration] = useState<number>()
     const [epNumber, setEpNumber] = useState("")
     const [file, setFile] = useState("")
     const [podcastOptions, setPodcastOptions] = useState<PodcastRes[]>([])
@@ -29,9 +30,10 @@ const UploadEpisode = () => {
     const handleSubmit = () => {
         const podcastId = podcastOptions.find(p => p.podcast_title == podcast);
 
-        if (podcastId?.podcast_id && sessionUuid) {
+        if (podcastId?.podcast_id && sessionUuid && duration) {
+            console.log(duration)
             const data: EpisodeRes = {
-                episode_duration: 0,
+                episode_duration: duration,
                 podcast_id: podcastId.podcast_id,
                 episode_description: description,
                 episode_title: title,
@@ -59,6 +61,13 @@ const UploadEpisode = () => {
                         onChange={(e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
                         name="title"
                         placeholder="title" />
+                    <InputField
+                        value={duration}
+                        className="bg-transparent border-purple-300 border-2 placeholder:text-purple-300"
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => setDuration(+e.target.value)}
+                        type="number"
+                        name="duration"
+                        placeholder="duration" />
                     <InputField
                         value={file}
                         className="bg-transparent border-purple-300 border-2 placeholder:text-purple-300"
