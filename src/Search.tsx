@@ -11,14 +11,14 @@ import Table from "./Table.new"
 const Search = () => {
     const { creations, collections, activeTab } = useSearchContext()
     const [categories, setCategories] = useState<Category[]>([])
-    const [genres, setGenres] = useState<Genre[]>([])
+    const [genres, setGenres] = useState<string[]>([])
     const { sessionUuid } = useContext(AuthContext)
     useEffect(() => {
         if (sessionUuid) {
-            get_categories(sessionUuid).then(res => { setCategories(res); console.log(res) })
+            get_categories(sessionUuid).then(res => setCategories(res))
             get_genres(sessionUuid).then(res => setGenres(res))
         }
-    }, [])
+    }, [activeTab])
 
     return (
         <div className="bg-black text-purple-300 min-h-screen  h-fit p-10">
@@ -27,24 +27,14 @@ const Search = () => {
                 <h1 className="my-3 text-white text-bold text-5xl">Search</h1>
                 <SearchTab categories={categories} genres={genres} />
             </div>
-            <h1 className="my-3 text-white text-bold text-5xl">
-                {
-                    activeTab == CreationType.Song ? "Songs" : "Episodes"
-                }
-            </h1>
             {
                 creations ?
-                    <Table rows={creations} />
+                    <Table rows={creations} title={activeTab == CreationType.Song ? "Songs" : "Episodes"} />
                     : null
             }
-            <h1 className="my-3 text-white text-bold text-5xl">
-                {
-                    activeTab == CreationType.Song ? "Albums" : "Podcasts"
-                }
-            </h1>
             {
                 collections ?
-                    <Table rows={collections} />
+                    <Table rows={collections} title={activeTab == CreationType.Song ? "Albums" : "Podcasts"} />
                     : null
             }
         </div>

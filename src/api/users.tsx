@@ -3,12 +3,11 @@ const url = "/"
 
 async function validate_session(sessionUuid: string) {
     const userData = await get_user_info(sessionUuid);
-    return !!userData
+    return userData
 }
 
 async function login_user(userData: { user_name: string, user_password: string }): Promise<{ session_uuid: "string" }> {
 
-    console.log(JSON.stringify(userData))
     return fetch("http://localhost:8000/login",
         {
             headers: {
@@ -18,12 +17,11 @@ async function login_user(userData: { user_name: string, user_password: string }
             body: JSON.stringify(userData)
         }
     ).then((res) => res.json()).catch((err) => {
-        console.log(err)
     })
 
 }
 
-function get_user_info(sessionUuid: string): Promise<Buzzer> {
+async function get_user_info(sessionUuid: string): Promise<Buzzer> {
     return fetch("http://localhost:8000/profile", {
         headers: {
             'Content-Type': 'application/json',
@@ -36,7 +34,6 @@ function get_user_info(sessionUuid: string): Promise<Buzzer> {
 
 async function create_user(userData: Buzzer): Promise<{ user_name: string, user_email: string, user_type: string }> {
 
-    console.log(userData)
     const options = {
         method: "POST",
         headers: {

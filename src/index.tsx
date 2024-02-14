@@ -21,6 +21,8 @@ import Playlists from './Playlists';
 import SearchContextProvider from './SearchContext';
 import ProtectedRoute from './ProtectedRoute';
 import { AuthContext, AuthProvider } from './AuthContext';
+import CreatePlaylist from './CreatePlaylist';
+import { UserType } from './enums';
 
 /*
 import Root, { rootLoader } from "./routes/root";
@@ -55,7 +57,7 @@ const router = createBrowserRouter([
         element: (<ProtectedRoute><Profile /></ProtectedRoute>),
     },
     {
-        path: "/playlist/:playlistName",
+        path: "/playlist/:id",
         element: <Playlists />,
     },
     {
@@ -64,19 +66,23 @@ const router = createBrowserRouter([
     },
     {
         path: "/create/album",
-        element: <CreateAlbum />,
+        element: <ProtectedRoute userType={UserType.Artist}><CreateAlbum /></ProtectedRoute>,
+    },
+    {
+        path: "/create/playlist",
+        element: <ProtectedRoute userType={UserType.Listener}><CreatePlaylist /></ProtectedRoute>,
     },
     {
         path: "/create/podcast",
-        element: <CreatePodcast />,
+        element: <ProtectedRoute userType={UserType.Artist}><CreatePodcast /></ProtectedRoute>,
     },
     {
         path: "/upload/episode",
-        element: <UploadEpisode />,
+        element: <ProtectedRoute userType={UserType.Artist}><UploadEpisode /></ProtectedRoute>,
     },
     {
         path: "/upload/song",
-        element: <UploadSong />,
+        element: <ProtectedRoute userType={UserType.Artist}><UploadSong /></ProtectedRoute>,
     }
 ]);
 
@@ -85,11 +91,13 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-    <React.StrictMode>
-        <AuthProvider>
-            <RouterProvider router={router} />
-        </AuthProvider>
-    </React.StrictMode>
+    <div className='min-h-screen h-full bg-black'>
+        <React.StrictMode>
+            <AuthProvider>
+                <RouterProvider router={router} />
+            </AuthProvider>
+        </React.StrictMode>
+    </div>
 );
 
 // If you want to start measuring performance in your app, pass a function

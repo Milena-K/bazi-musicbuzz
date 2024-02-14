@@ -1,15 +1,16 @@
 import { useContext, useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { get_playlists } from "./api/creation"
+import { get_user_info } from "./api/users"
 import { AuthContext } from "./AuthContext"
 import Button from "./Button"
-import Table from "./Table"
 
 const Header = () => {
     const [showMenu, setShowMenu] = useState(false)
     const [playlists, setPlaylists] = useState<PlaylistInfo[]>([])
     const [showPlaylists, setShowPlaylists] = useState(false)
     const buttonClass = "border w-max border-2 border-purple-400 rounded-lg bg-black text-black hover:font-bold"
+    const [user, setUser] = useState<Buzzer>()
     const { logout, sessionUuid } = useContext(AuthContext)
     const navigate = useNavigate()
 
@@ -22,8 +23,9 @@ const Header = () => {
                 }))
                 setPlaylists(data)
             })
+            get_user_info(sessionUuid).then(res => setUser(res))
         }
-    }, [])
+    }, [showPlaylists])
 
     return (
         <div>
@@ -41,30 +43,37 @@ const Header = () => {
                         </h3>
                     </div>
                     <div className="text-black flex justify-end items-center gap-3 relative">
-                        <div className="relative w-1/2">
-                            <Button label="playlists" className="w-full" onClick={() => { setShowPlaylists(!showPlaylists); setShowMenu(false) }} />
-                            {
-                                showPlaylists ?
-                                    (
-                                        <div className="absolute grid text-black mt-3 right-0
-                                            bg-white text-nowrap z-10
-                                            align-items-end overflow-y-scroll h-60
-                                            rounded-md ">
-                                            {playlists.map(playlist =>
-                                                <Link to={"/playlist/" + playlist.id}
-                                                    className="p-3 rounded-md hover:bg-purple-300"
-                                                    key={playlist.id}>
-                                                    <button className="w-full h-full" onClick={() => setShowPlaylists(false)} >
-                                                        {playlist.name}
-                                                    </button>
-                                                </Link>
+                        {
+                            user && user.user_type == 'listener' &&
+                            <div className="relative w-1/2">
+                                <Button label="playlists" className="w-full" onClick={() => { setShowPlaylists(!showPlaylists); setShowMenu(false) }} />
+                                {
+                                    showPlaylists ?
+                                        (
+                                            <div className="absolute grid text-black mt-3 right-0
+                                            bg-white text-nowrap z-10 min-w-full
+                                            align-items-end overflow-y-scroll min-h-min
+                                            rounded-md">
 
-                                            )}
-                                        </div>
-                                    )
-                                    : null
-                            }
-                        </div>
+                                                {
+                                                    playlists.length == 0 ?
+                                                        <div className="p-3">please create a playlist</div>
+                                                        : playlists.map(playlist =>
+                                                            <Link to={"/playlist/" + playlist.id}
+                                                                className="p-3 rounded-md hover:bg-purple-300 h-fit"
+                                                                key={playlist.id}>
+                                                                <button className="w-full" onClick={() => setShowPlaylists(false)} >
+                                                                    {playlist.name}
+                                                                </button>
+                                                            </Link>
+                                                        )
+                                                }
+                                            </div>
+                                        )
+                                        : null
+                                }
+                            </div>
+                        }
                         <Link className="w-1/2" to="/search">
                             <Button className="w-full" label="search" onClick={() => {}} />
                         </Link>
@@ -78,18 +87,29 @@ const Header = () => {
                                              text-nowrap gap-5 p-5 align-items-end
                                              w-96 right-0
                                              rounded-md grid grid-cols-2 grid-rows-2 ">
-                                            <Link to="/upload/song">
-                                                <Button className={buttonClass} label="upload a song" onClick={() => setShowMenu(!showMenu)} />
-                                            </Link>
-                                            <Link to="/upload/episode">
-                                                <Button className={buttonClass} label="upload an episode" onClick={() => setShowMenu(!showMenu)} />
-                                            </Link>
-                                            <Link to="/create/album">
-                                                <Button className={buttonClass} label="create an album" onClick={() => setShowMenu(!showMenu)} />
-                                            </Link>
-                                            <Link to="/create/podcast">
-                                                <Button className={buttonClass} label="create a podcast" onClick={() => setShowMenu(!showMenu)} />
-                                            </Link>
+                                            {
+                                                user?.user_type == 'artist' ?
+                                                    <>
+                                                        <Link to="/upload/song">
+                                                            <Button className={buttonClass} label="upload a song" onClick={() => setShowMenu(!showMenu)} />
+                                                        </Link>
+                                                        <Link to="/upload/episode">
+                                                            <Button className={buttonClass} label="upload an episode" onClick={() => setShowMenu(!showMenu)} />
+                                                        </Link>
+                                                        <Link to="/create/album">
+                                                            <Button className={buttonClass} label="create an album" onClick={() => setShowMenu(!showMenu)} />
+                                                        </Link>
+                                                        <Link to="/create/podcast">
+                                                            <Button className={buttonClass} label="create a podcast" onClick={() => setShowMenu(!showMenu)} />
+                                                        </Link>
+                                                    </>
+                                                    :
+
+                                                    <Link to="/create/playlist">
+                                                        <Button className={buttonClass} label="create a playlist" onClick={() => setShowMenu(!showMenu)} />
+                                                    </Link>
+
+                                            }
                                         </div>
                                     ) : null
                             }

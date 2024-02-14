@@ -3,7 +3,7 @@ import { add_song_to_playlist, get_playlists } from "./api/creation"
 import { AuthContext } from "./AuthContext"
 
 type propType = {
-    song_id: number
+    song_id?: number
 }
 
 
@@ -14,14 +14,12 @@ const AddButton = ({ song_id }: propType) => {
     const { sessionUuid } = useContext(AuthContext)
 
     const addToPlaylist = (playlist_id: number) => {
-        const data = {
-            playlist_id,
-            song_id,
-        }
         const sessionUuid = window.localStorage.getItem("sessionUuid")
-        if (sessionUuid) {
-            console.log(`sessionUuid: ${sessionUuid}`)
-            console.log(data)
+        if (sessionUuid && song_id) {
+            const data = {
+                playlist_id,
+                song_id,
+            }
             add_song_to_playlist(data, sessionUuid).then(res => console.log(res))
         }
     }
@@ -52,12 +50,17 @@ const AddButton = ({ song_id }: propType) => {
                             bg-white text-nowrap z-10
                             align-items-end overflow-y-scroll h-60
                             rounded-md ">
-                        {playlists?.map(playlist =>
-                            <button key={playlist.id}
-                                onClick={() => addToPlaylist(playlist.id)}
-                                className="p-3 rounded-md hover:bg-purple-300">
-                                {playlist.name}</button>
-                        )}
+                        {
+                            playlists?.length ?
+                                playlists?.map(playlist =>
+                                    <button key={playlist.id}
+                                        onClick={() => { addToPlaylist(playlist.id); setShowMenu(false) }}
+                                        className="p-3 rounded-md hover:bg-purple-300 h-fit">
+                                        {playlist.name}</button>
+                                )
+                                : <p className="text-black">create a playlist</p>
+
+                        }
                     </div>
                     : null
             }

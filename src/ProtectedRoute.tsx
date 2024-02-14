@@ -1,46 +1,57 @@
-import { FC, ReactNode, useEffect, useState } from "react"
-import { Navigate } from "react-router-dom"
+import { FC, ReactNode, useContext, useEffect, useState } from "react"
 import { validate_session } from "./api/users"
 import App from "./App"
+import { AuthContext } from "./AuthContext"
+import { UserType } from "./enums"
+import Header from "./Header"
 
 type ProtectedRouteT = {
     children: ReactNode
+    userType?: UserType
 }
 
-const ProtectedRoute: FC<ProtectedRouteT> = ({ children }) => {
+const ProtectedRoute: FC<ProtectedRouteT> = ({ children, userType }) => {
     const [isValidSession, setIsValidSession] = useState(false)
+    const { userId, sessionUuid } = useContext(AuthContext)
 
-    const checkSession = async () => {
-        const sessionUuid = window.localStorage.getItem("sessionUuid")
-
-        console.log(`before if ${sessionUuid}`)
+    const checkSession = () => {
         if (sessionUuid) {
-            const val = await validate_session(sessionUuid).then((value) => {
-                console.log(`in await ${value}`)
-                setIsValidSession(value)
+            validate_session(sessionUuid).then((userData) => {
+                if (userType) {
+                    if (userData && userData.user_type == userType) {
+                        setIsValidSession(true)
+                    } else {
+                        setIsValidSession(false)
+                    }
+                } else if (userData && !userType) {
+                    setIsValidSession(true)
+                } else {
+                    setIsValidSession(false)
+                }
+
             })
-            console.log(`in if ${val}`)
         }
     }
 
     useEffect(() => {
         checkSession()
-        console.log("useEffect")
-        console.log(isValidSession)
-
-    }, [])
-
-
-
-    return isValidSession ? <>{children}</> : <App />
-}
-/*
+    })
 
     if (!isValidSession) {
-        console.log(`near the end ${isValidSession}`)
-        return <Navigate to="/" />
+        if (userType && userId) {
+            return <>
+                <Header />
+                <div className="text-white flex items-center text-center h-screen">
+                    <p className="w-full"> only a user {userType} has access to do that</p>
+                </div>
+            </>
+        } else {
+            return <App />
+        }
+    } else {
+        return <>{children}</>
     }
-*/
+}
 
 
 export default ProtectedRoute

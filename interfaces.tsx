@@ -13,10 +13,9 @@
 // ----------------
 
 interface Album {
-    title: string,
-    date: Date,
-    createdBy: number,
-    recordLabelId: number
+    album_title: string,
+    al_created_by: number,
+    rlabel_id: number
 }
 
 
@@ -61,26 +60,26 @@ interface EpisodeRes {
     episode_file: string
     episode_number: number
     episode_duration: number
-    episode_id: number
+    episode_id?: number
 }
 
 interface SongRes {
-    album_id: number,
+    album_id?: number,
     rlabel_id: number,
     lyrics: string,
     song_title: string,
     song_file: string,
     song_duration: number,
-    song_date: string,
+    song_date: string | Date,
     genres: string[],
-    song_id: number
+    song_id?: number
 }
 
 interface AlbumRes {
     album_title: string,
     al_created_by: number,
     rlabel_id: number,
-    album_id: number
+    album_id?: number
 }
 
 interface PodcastRes {
@@ -97,15 +96,6 @@ interface PlaylistRes {
     created_by: number
 }
 
-interface EpisodeRes {
-    podcast_id: number,
-    episode_description: string,
-    episode_title: string,
-    episode_file: string,
-    episode_number: number,
-    episode_duration: number,
-    episode_id: number
-}
 
 type PlaylistInfo = {
     id: number,
@@ -130,16 +120,16 @@ interface Episode extends Creation {
 
 interface Podcast {
     id?: number,
-    title: string,
-    categoryId: number,
-    createdBy: number,
+    podcast_title: string,
+    category_id: number,
+    created_by: number,
 }
 
 interface Playlist {
-    id: number,
-    name: string,
-    description: string,
-    createdBy: number
+    playlist_id: number,
+    playlist_name: string,
+    playlist_description: string,
+    created_by: number
 }
 
 interface Category {
@@ -182,8 +172,8 @@ interface Genre {
 }
 
 interface RecordLabel {
-    id: number,
-    name: string
+    rlabel_id: number,
+    rlabel_name: string
 }
 
 type resType = {

@@ -1,4 +1,6 @@
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useContext, useEffect, useState } from "react"
+import { create_album, get_record_labels } from "./api/creation"
+import { AuthContext } from "./AuthContext"
 import Button from "./Button"
 import Header from "./Header"
 import InputField from "./inputField"
@@ -7,26 +9,35 @@ import SelectField from "./SelectField"
 
 const CreateAlbum = () => {
     const [title, setTitle] = useState("")
-    const [recordLabel, setRecordLabel] = useState("rl1")
-    const rlOptions = ["rl1", "rl2", "rl3", "rl4"]
+    const [rlOptions, setRLOptions] = useState<RecordLabel[]>([])
+    const [recordLabel, setRecordLabel] = useState<string>()
+    const [message, setMessage] = useState<string>("")
+    const { sessionUuid, userId } = useContext(AuthContext)
 
-    // useEffect(() => {
-    // const user = getUserData()
-    // const rlabel = getRecord()
-    //});
-
+    useEffect(() => {
+        if (sessionUuid) {
+            get_record_labels(sessionUuid).then((res) => { setRLOptions(res); if (res.at(0)) setRecordLabel(res[0].rlabel_name) })
+        }
+    }, []);
 
     const handleSubmit = () => {
-        const userId = 5;
         const podcastId = 5;
 
-        const data: Album = {
-            title,
-            date: new Date(),
-            createdBy: userId,
-            recordLabelId: rlOptions.indexOf(recordLabel),
-        }
+        if (sessionUuid && userId) {
+            const rl_id = rlOptions.filter(op => op.rlabel_name == recordLabel)[0].rlabel_id
 
+            const data: Album = {
+                album_title: title,
+                al_created_by: userId,
+                rlabel_id: rl_id,
+            }
+
+            create_album(data, sessionUuid).then(res => {
+                setMessage("Album created")
+            }).catch((res) => {
+                setMessage("Something went wrong")
+            })
+        }
     }
 
     return (
@@ -42,14 +53,17 @@ const CreateAlbum = () => {
                         name="title"
                         placeholder="title" />
                     <SelectField
-                        options={rlOptions}
+                        options={rlOptions.map(op => op.rlabel_name)}
                         value={recordLabel}
                         className="bg-transparent border-purple-300 border-2 text-purple-300 "
-                        onChange={(value) => setRecordLabel(recordLabel)}
+                        onChange={(value) => setRecordLabel(value)}
                     />
                     <div className="flex justify-end mt-3">
                         <Button className="text-black font-semibold" label="done" onClick={() => handleSubmit()} type="submit" />
                     </div>
+                    <p className="text-violet-300">
+                        {message}
+                    </p>
                 </div>
             </div>
         </div>

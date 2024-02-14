@@ -1,4 +1,6 @@
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useContext, useEffect, useState } from "react"
+import { create_podcast, get_categories, get_podcasts_profile, upload_episode } from "./api/creation"
+import { AuthContext } from "./AuthContext"
 import Button from "./Button"
 import Header from "./Header"
 import InputField from "./inputField"
@@ -7,32 +9,40 @@ import SelectField from "./SelectField"
 
 const UploadEpisode = () => {
     const [title, setTitle] = useState("")
-    const [podcast, setPodcast] = useState("")
     const [description, setDescription] = useState("")
-    const [category, setCategory] = useState("")
     const [epNumber, setEpNumber] = useState("")
     const [file, setFile] = useState("")
-    const podcastOptions = ["podcast", "podcast1", "podcast2", "podcast3"]
-    const categoryOptions = ["category", "cat1", "cat2", "cat3"]
+    const [podcastOptions, setPodcastOptions] = useState<PodcastRes[]>([])
+    const [podcast, setPodcast] = useState("")
+    const [categoryOptions, setCategoryOptions] = useState<Category[]>([])
+    const [category, setCategory] = useState("")
+    const [message, setMessage] = useState<string>("")
+    const { sessionUuid, userId } = useContext(AuthContext)
 
-    // useEffect(() => {
-    // const user = getUserData()
-    // const rlabel = getRecord()
-    //});
+    useEffect(() => {
+        if (sessionUuid) {
+            get_categories(sessionUuid).then(res => { setCategoryOptions(res); if (res.at(0)) setCategory(res[0]?.category_name) }).catch(err => console.log())
+            get_podcasts_profile(sessionUuid).then(res => { setPodcastOptions(res); if (res.at(0)) setPodcast(res[0]?.podcast_title) }).catch(err => console.log())
+        }
+    }, []);
 
     const handleSubmit = () => {
-        const userId = 5;
-        const podcastId = 5;
+        const podcastId = podcastOptions.find(p => p.podcast_title == podcast);
 
-        const data: Episode = {
-            duration: 0,
-            podcastId,
-            description,
-            title,
-            filePath: file,
-            number: parseInt(epNumber),
-            date: new Date(),
-            createdBy: userId,
+        if (podcastId?.podcast_id && sessionUuid) {
+            const data: EpisodeRes = {
+                episode_duration: 0,
+                podcast_id: podcastId.podcast_id,
+                episode_description: description,
+                episode_title: title,
+                episode_file: file,
+                episode_number: parseInt(epNumber),
+            }
+            upload_episode(data, sessionUuid).then(res => {
+                setMessage("Episode created")
+            }).catch((res) => {
+                setMessage("Something went wrong")
+            })
         }
 
     }
@@ -62,13 +72,13 @@ const UploadEpisode = () => {
                 </div>
                 <div className="w-1/2">
                     <SelectField
-                        options={podcastOptions}
+                        options={podcastOptions.map(p => p.podcast_title)}
                         value={podcast}
                         className="bg-transparent border-purple-300 border-2 text-purple-300 "
                         onChange={(value) => setPodcast(value)}
                     />
                     <SelectField
-                        options={categoryOptions}
+                        options={categoryOptions.map(c => c.category_name)}
                         value={category}
                         className="bg-transparent border-purple-300 border-2 text-purple-300 "
                         onChange={(value) => setCategory(value)}
@@ -83,6 +93,9 @@ const UploadEpisode = () => {
                     <div className="flex justify-end mt-3">
                         <Button className="text-black font-semibold" label="done" onClick={() => handleSubmit()} type="submit" />
                     </div>
+                    <p className="text-violet-300">
+                        {message}
+                    </p>
                 </div>
             </div>
         </div>

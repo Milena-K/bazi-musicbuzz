@@ -8,7 +8,7 @@ import { AuthContext } from "./AuthContext"
 
 type SearchTabProps = {
     categories: Category[]
-    genres: Genre[]
+    genres: string[]
 }
 
 const SearchTab = ({ categories, genres }: SearchTabProps) => {
@@ -83,10 +83,10 @@ const SearchTab = ({ categories, genres }: SearchTabProps) => {
                 {
                     activeTab == CreationType.Song ?
                         genres.map(value =>
-                            <button onClick={() => handleSelect(value.genre_name)}
-                                key={value.genre_id}
-                                className={!fields.has(value.genre_name) ? "border border-purple-300 rounded" : "border border-purple-300 rounded text-black bg-purple-300"}>
-                                {value.genre_name}
+                            <button onClick={() => handleSelect(value)}
+                                key={value}
+                                className={!fields.has(value) ? "border border-purple-300 rounded" : "border border-purple-300 rounded text-black bg-purple-300"}>
+                                {value}
                             </button>
                         )
                         : categories.map(value =>

@@ -11,19 +11,25 @@ const LoginUser = () => {
     const location = useLocation();
     const isArtist = location.pathname.includes("artist") ? true : false
     const [username, setUsername] = useState("")
+    const [message, setMessage] = useState("")
     const [pass, setPass] = useState("")
     const { login } = useContext(AuthContext)
     const navigate = useNavigate()
+    const { sessionUuid } = useContext(AuthContext)
 
     const handleSubmit = async () => {
         const data = {
             user_name: username,
             user_password: pass,
         }
-        login_user(data).then((data) => {
-            login(data.session_uuid)
-            navigate("/profile")
-            console.log("navigating")
+        login_user(data).then((res) => {
+            if (res.session_uuid) {
+                login(res.session_uuid)
+                navigate("/profile")
+                console.log("navigating")
+            } else {
+                setMessage("username or password is invalid")
+            }
         })
     }
 
@@ -41,6 +47,9 @@ const LoginUser = () => {
                         login
                     </h3>
                     <div className="text-black">
+                        <p className="text-red-300">
+                            {message}
+                        </p>
                         <InputField
                             value={username}
                             onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}

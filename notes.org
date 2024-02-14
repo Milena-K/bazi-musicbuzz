@@ -1,11 +1,11 @@
-#+title: TODO
-
-
 * TODO
-** SearchTab
-- [ ] make get request in the search tab for episodes
-- [ ] pull the episode categories
-- [ ] insert two tables based on what tab is selected (album/song or episode/podcast)
+- [ ] can create episodes and podcasts with same data
+
+** Backend
+- [ ] get every song in playlist and show it
+- [ ] get song genres instead of null when searching songs
+- [ ] the search is case sensitive
+- [ ] only listeners can create and add to playlists
 
 ** Docker
 - [ ] fix issues with cpu 100% usage and sudden killing of web image

@@ -3,6 +3,11 @@ export enum CreationType {
     Podcast,
 }
 
+export enum UserType {
+    Artist = "artist",
+    Listener = "listener",
+}
+
 export enum Country {
     "Select a country" = "NONE",
     Macedonia = "MK",
